@@ -4,7 +4,7 @@ APP = ['Lagence Project.py']
 OPTIONS = {
     'argv_emulation': True,
     'packages': [],
-    'excludes': ['PyInstaller', 'PySide2', 'PySide6']
+    'excludes': ['PyInstaller', 'PySide2', 'PySide6', 'packaging']
 }
 
 setup(
