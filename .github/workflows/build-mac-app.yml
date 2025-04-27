@@ -28,6 +28,10 @@ jobs:
         pip install --no-cache-dir py2app
         pip install --no-cache-dir -r requirements.txt
 
+    - name: Clean build artifacts again
+      run: |
+        rm -rf build dist *.egg-info
+
     - name: Build the app
       run: |
         python setup.py py2app
