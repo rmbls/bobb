@@ -16,7 +16,11 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.12.6'  # or whatever Python version you used locally
+        python-version: '3.11'  # or whatever Python version you used locally
+
+    - name: Clean build artifacts
+      run: |
+        rm -rf build dist *.egg-info
 
     - name: Install dependencies
       run: |
