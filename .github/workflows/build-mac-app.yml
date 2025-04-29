@@ -16,7 +16,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.10'  # Downgrade for better compatibility
+        python-version: '3.11'  # Downgrade for better compatibility
 
     - name: Clean build artifacts
       run: |
