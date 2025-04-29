@@ -4,3 +4,4 @@ xlrd
 jaraco.text
 PySimpleGUIQt
 PyQt5
+numpy

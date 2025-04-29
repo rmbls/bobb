@@ -3,7 +3,7 @@ from setuptools import setup
 APP = ['Lagence Project.py']
 OPTIONS = {
     'argv_emulation': True,
-    'packages': [],
+    'packages': ['numpy', 'pandas'],
     'excludes': [
         'PyInstaller', 'PySide2', 'PySide6', 'packaging', 'backports', 'backports.tarfile',
         'tkinter', '_tkinter'
