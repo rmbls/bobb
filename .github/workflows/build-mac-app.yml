@@ -16,7 +16,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.11'  # or whatever Python version you used locally
+        python-version: '3.10'  # Downgrade for better compatibility
 
     - name: Clean build artifacts
       run: |
@@ -24,7 +24,7 @@ jobs:
 
     - name: Upgrade build tools
       run: |
-        pip install --upgrade setuptools wheel py2app
+        pip install --upgrade setuptools==68.2.2 wheel==0.41.2 py2app==0.28
 
     - name: Install dependencies
       run: |
