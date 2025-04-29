@@ -36,9 +36,11 @@ def update_file(file_path):
     logging.info(f"{len(df)} rows in file.")
     
     #Add new blank columns
-    df["global_title_tag"] = ""
-    df["Product Handle/Parent SKU"] = ""
-    df["Product Handle"] = ""
+    df["SEO Title"] = ""
+    df["Parent SKU"] = ""
+    df["Shopify Handle"] = ""
+    df["Related Products Display"] = ""
+    df["Option Attributes"] = ""
     
     df = pd.concat([pd.DataFrame([0]), df], ignore_index=True)
     rowProcessed = 0
@@ -48,25 +50,30 @@ def update_file(file_path):
     for index, row in df.iterrows():
         #Format Existing Rows
         df.loc[index,'Seas'] = f"season: {row['Seas']}"
-        df.loc[index, 'global_title_tag'] = f"L'AGENCE - {str(row['Style Desc']).title()} in {str(row['Clr Desc']).title()}"
+        df.loc[index, 'SEO Title'] = f"L'AGENCE - {str(row['Style Desc']).title()} in {str(row['Clr Desc']).title()}"
         if row['Country of Origin Description'] == "UNITED STATES":
             df.loc[index,'Content Description'] = f"[\"{str(row['Content Description']).title().replace('  ',' ')}\",\"Made in Los Angeles\"]"
         else:
             df.loc[index,'Content Description'] = f"[\"{str(row['Content Description']).title().replace('  ',' ')}\",\"Imported\"]"
         df.loc[index,"Clr Desc"] = str(row["Clr Desc"]).title()
         df.loc[index,"Style Desc"] = str(row["Style Desc"]).title()
-
+        df.loc[index,"UPC Code"] = str(row["UPC Code"]).replace(".0","")
+        df.loc[index,"Prod Type Desc"] = str(row["Prod Type Desc"]).lower()
         
         #Set up Parent
         tempHandle = f"{str(row['Style Desc']).lower().replace(' ','-').replace('/','-')}-{str(row['Clr Desc']).lower().replace(' ','-').replace('/','-')}"
         parentSku = str(row['Sty-Clr-Siz'])[:str(row['Sty-Clr-Siz']).rfind('-')]
-        if index >0 and parentSku != df.loc[index-1,"Product Handle/Parent SKU"]:
+        if index >0 and parentSku != df.loc[index-1,"Parent SKU"]:
             df.loc[index - 0.5] = df.loc[index]
             df.loc[index -0.5, "Sty-Clr-Siz"] = parentSku
-            df.loc[index -0.5, "Product Handle"] = tempHandle
-            df.loc[index, "Product Handle/Parent SKU"] = parentSku
+            df.loc[index -0.5, "Shopify Handle"] = tempHandle
+            df.loc[index -0.5, "Clr Desc"] = ""
+            df.loc[index -0.5, "Size"] = ""
+            df.loc[index -0.5, "Related Products Display"] = "only manual"
+            df.loc[index -0.5, "Option Attributes"] = "color|size"
+            df.loc[index, "Parent SKU"] = parentSku
         else:
-            df.loc[index, "Product Handle/Parent SKU"] = parentSku
+            df.loc[index, "Parent SKU"] = parentSku
         
         rowProcessed += 1
         if str(rowProcessed).endswith('0'):
@@ -82,17 +89,20 @@ def update_file(file_path):
         'Sty-Clr-Siz': 'Item ID',
         'Style Desc':'Name',
         'Clr Desc':'Color',
-        'Prod Type Desc':'lagencefashion Product Type',
-        'Cost': 'lagencefashion Cost Per Item',
-        'MSRP': 'lagencefashion Price',
-        'Seas': 'lagencefashion Tags',
-        'UPC Code': 'lagencefashion Barcode',
-        'Country': 'lagencefashion Country Code',
-        'HTS Code': 'lagencefashion HTS Code',
-        'Content Description': 'custom_material_spec_composition'
+        'Prod Type Desc':'Product Type',
+        'MSRP': 'Price',
+        'Seas': 'Tags',
+        'Country': 'Country Code',
+        'Content Description': 'composition',
+        'Wght/Unit': 'Weight'
         }, inplace = True)
 
-    df["Compare At Price"] = df["lagencefashion Price"]
+    df["Compare At Price"] = df["Price"]
+    df["Vendor"] = "L'AGENCE"
+    df["lagencefashion Shopify Status"] = "active"
+    df["Weight Unit"] = "lb"
+    df["lagencefashion Requires Shipping"] = "true"
+
 
     df.drop(0, axis = 1, inplace=True)
     df = df.loc[1:]
@@ -105,7 +115,7 @@ def update_file(file_path):
     df.to_excel(f"{filename} - Updated for Catsy.xlsx", index = False)
     logging.info("File updated successfully.")
     print(f"\nUpdated file saved to: \n{os.path.join(fullPath, f'{filename} - Updated for Catsy.xlsx')}\n")
-    input("Press any key to exit.")
+    input("Press Enter to exit.")
     
 
 def main():
