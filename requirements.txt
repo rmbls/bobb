@@ -1,5 +1,6 @@
 pandas
 openpyxl
-# xlrd  # Uncomment if you need to support old .xls files
+xlrd
 jaraco.text
-PySimpleGUI
+PySimpleGUIQt
+PyQt5

@@ -1,5 +1,5 @@
 import pandas as pd
-import PySimpleGUI as sg
+import PySimpleGUIQt as sg
 import logging
 import os
 
