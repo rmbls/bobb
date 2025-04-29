@@ -13,10 +13,16 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.11'  # Downgrade for better compatibility
+    - name: Install Homebrew Python and Tcl/Tk
+      run: |
+        brew install python@3.11 tcl-tk
+        echo "/usr/local/opt/python@3.11/bin" >> $GITHUB_PATH
+        echo "export PATH=\"/usr/local/opt/python@3.11/bin:$PATH\"" >> $GITHUB_ENV
+        echo "export LDFLAGS=\"-L/usr/local/opt/tcl-tk/lib\"" >> $GITHUB_ENV
+        echo "export CPPFLAGS=\"-I/usr/local/opt/tcl-tk/include\"" >> $GITHUB_ENV
+        echo "export PKG_CONFIG_PATH=\"/usr/local/opt/tcl-tk/lib/pkgconfig\"" >> $GITHUB_ENV
+        which python3
+        python3 --version
 
     - name: Clean build artifacts
       run: |
