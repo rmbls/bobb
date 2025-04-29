@@ -2,3 +2,4 @@ pandas
 openpyxl
 # xlrd  # Uncomment if you need to support old .xls files
 jaraco.text
+PySimpleGUI

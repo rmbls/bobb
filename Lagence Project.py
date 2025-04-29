@@ -1,6 +1,5 @@
 import pandas as pd
-import tkinter as tk
-from tkinter import filedialog
+import PySimpleGUI as sg
 import logging
 import os
 
@@ -15,11 +14,14 @@ def printTitle():
     print()
 
 def select_files():
-    root = tk.Tk()
-    root.withdraw()
-    file_path = filedialog.askopenfilename(
-        title="Pick a File",
-        filetypes=[("Excel files", "*.xlsx *.xls"), ("CSV files", "*.csv")]
+    file_path = sg.popup_get_file(
+        "Pick a File",
+        file_types=(
+            ("Excel Files", "*.xlsx;*.xls"),
+            ("CSV Files", "*.csv"),
+            ("All Files", "*.*")
+        ),
+        no_window=True
     )
     logging.info(f"Selected file: {file_path}")
     return file_path
