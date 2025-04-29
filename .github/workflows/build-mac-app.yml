@@ -13,31 +13,29 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Install Homebrew Python and Tcl/Tk
+    - name: Install Homebrew Python, Tcl/Tk, and Tkinter
       run: |
-        brew install python@3.11 tcl-tk
+        brew install python@3.11 tcl-tk python-tk@3.11
         echo "/usr/local/opt/python@3.11/bin" >> $GITHUB_PATH
         echo "export PATH=\"/usr/local/opt/python@3.11/bin:$PATH\"" >> $GITHUB_ENV
         echo "export LDFLAGS=\"-L/usr/local/opt/tcl-tk/lib\"" >> $GITHUB_ENV
         echo "export CPPFLAGS=\"-I/usr/local/opt/tcl-tk/include\"" >> $GITHUB_ENV
         echo "export PKG_CONFIG_PATH=\"/usr/local/opt/tcl-tk/lib/pkgconfig\"" >> $GITHUB_ENV
-        which python3
-        python3 --version
-        python3 -m pip install --upgrade pip
+        which python3.11
+        python3.11 --version
+
+    - name: Set up virtual environment
+      run: |
+        python3.11 -m venv venv
+        source venv/bin/activate
+        pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install py2app
 
     - name: Clean build artifacts
       run: |
         rm -rf build dist *.egg-info
 
-    - name: Upgrade build tools
-      run: |
-        pip install --upgrade setuptools==68.2.2 wheel==0.41.2 py2app==0.28
-
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install --no-cache-dir py2app
-        pip install --no-cache-dir -r requirements.txt
 
     - name: Clean build artifacts again
       run: |
@@ -49,6 +47,7 @@ jobs:
 
     - name: Build the app
       run: |
+        source venv/bin/activate
         python setup.py py2app --force
 
     - name: Upload built app
