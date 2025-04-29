@@ -23,6 +23,7 @@ jobs:
         echo "export PKG_CONFIG_PATH=\"/usr/local/opt/tcl-tk/lib/pkgconfig\"" >> $GITHUB_ENV
         which python3
         python3 --version
+        python3 -m pip install --upgrade pip
 
     - name: Clean build artifacts
       run: |
