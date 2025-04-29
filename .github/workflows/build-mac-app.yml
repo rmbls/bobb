@@ -36,6 +36,10 @@ jobs:
       run: |
         rm -rf build dist *.egg-info
 
+    - name: Remove backports.tarfile if present
+      run: |
+        rm -rf build/bdist.macosx-10.9-universal2/python3.10-standalone/app/collect/backports.tarfile*
+
     - name: Build the app
       run: |
         python setup.py py2app --force
