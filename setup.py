@@ -1,18 +1,34 @@
-from setuptools import setup
+from setuptools import setup, Command
+import subprocess
 
-APP = ['Lagence Project.py']
-OPTIONS = {
-    'argv_emulation': True,
-    'includes': ['numpy', 'pandas', 'jaraco.text'],
-    'excludes': [
-        'PyInstaller', 'PySide2', 'PySide6', 'packaging', 'backports', 'backports.tarfile',
-        'tkinter', '_tkinter'
-    ]
-}
+class PyInstallerCommand(Command):
+    description = "Build the project using PyInstaller"
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        subprocess.check_call([
+            'pyinstaller',
+            '--onefile',
+            '--windowed',
+            'Lagence Project.py'
+        ])
 
 setup(
-    app=APP,
-    options={'py2app': OPTIONS},
-    setup_requires=['py2app'],
-    install_requires=['jaraco.text', 'numpy', 'pandas'],
+    name='LagenceProject',
+    version='1.0',
+    description='A script to transform Lagence spreadsheets into a format that can be imported into Catsy',
+    author='Darek from Catsy',
+    packages=[],
+    install_requires=[
+        'jaraco.text', 'numpy', 'pandas'
+    ],
+    cmdclass={
+        'pyinstaller': PyInstallerCommand,
+    },
 )
