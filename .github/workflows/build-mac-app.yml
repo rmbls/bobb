@@ -18,34 +18,22 @@ jobs:
       with:
         python-version: '3.11'
 
-    - name: Set up virtual environment
+    - name: Install dependencies
       run: |
-        python3 -m venv venv
-        source venv/bin/activate
         pip install --upgrade pip
         pip install -r requirements.txt
-        pip install py2app
+        pip install pyinstaller
 
     - name: Clean build artifacts
       run: |
         rm -rf build dist *.egg-info
 
-
-    - name: Clean build artifacts again
+    - name: Build the app with PyInstaller
       run: |
-        rm -rf build dist *.egg-info
-
-    - name: Remove backports.tarfile if present
-      run: |
-        rm -rf build/bdist.macosx-10.9-universal2/python3.10-standalone/app/collect/backports.tarfile*
-
-    - name: Build the app
-      run: |
-        source venv/bin/activate
-        python setup.py py2app --force
+        python setup.py pyinstaller
 
     - name: Upload built app
       uses: actions/upload-artifact@v4
       with:
         name: mac-app
-        path: dist/*.app
+        path: dist/*
