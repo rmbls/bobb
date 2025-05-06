@@ -2,6 +2,5 @@ pandas
 openpyxl
 xlrd
 jaraco.text
-PySimpleGUIQt
-PyQt5
 numpy
+pyinstaller

@@ -22,11 +22,11 @@ class PyInstallerCommand(Command):
 setup(
     name='LagenceProject',
     version='1.0',
-    description='A script to transform Lagence spreadsheets into a format that can be imported into Catsy',
+    description='A script to transform Lagence spreadsheets into a format that can be imported into Catsy. Requires Python with Tkinter support.',
     author='Darek from Catsy',
     packages=[],
     install_requires=[
-        'jaraco.text', 'numpy', 'pandas'
+        'jaraco.text', 'numpy', 'pandas', 'openpyxl', 'xlrd'
     ],
     cmdclass={
         'pyinstaller': PyInstallerCommand,
