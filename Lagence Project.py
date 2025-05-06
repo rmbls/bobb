@@ -1,5 +1,7 @@
 import pandas as pd
-import PySimpleGUIQt as sg
+import tkinter as tk
+from tkinter import filedialog
+
 import logging
 import os
 
@@ -14,14 +16,15 @@ def printTitle():
     print()
 
 def select_files():
-    file_path = sg.popup_get_file(
-        "Pick a File",
-        file_types=(
+    root = tk.Tk()
+    root.withdraw()
+    file_path = filedialog.askopenfilename(
+        title="Pick a File",
+        filetypes=[
             ("Excel Files", "*.xlsx;*.xls"),
             ("CSV Files", "*.csv"),
             ("All Files", "*.*")
-        ),
-        no_window=True
+        ]
     )
     logging.info(f"Selected file: {file_path}")
     return file_path
@@ -43,6 +46,7 @@ def update_file(file_path):
     df["Shopify Handle"] = ""
     df["Related Products Display"] = ""
     df["Option Attributes"] = ""
+    df["Variation Sequence"] = ""
     
     df = pd.concat([pd.DataFrame([0]), df], ignore_index=True)
     rowProcessed = 0
@@ -62,6 +66,8 @@ def update_file(file_path):
         df.loc[index,"UPC Code"] = str(row["UPC Code"]).replace(".0","")
         df.loc[index,"Prod Type Desc"] = str(row["Prod Type Desc"]).lower()
         
+        
+        
         #Set up Parent
         tempHandle = f"{str(row['Style Desc']).lower().replace(' ','-').replace('/','-')}-{str(row['Clr Desc']).lower().replace(' ','-').replace('/','-')}"
         parentSku = str(row['Sty-Clr-Siz'])[:str(row['Sty-Clr-Siz']).rfind('-')]
@@ -74,8 +80,15 @@ def update_file(file_path):
             df.loc[index -0.5, "Related Products Display"] = "only manual"
             df.loc[index -0.5, "Option Attributes"] = "color|size"
             df.loc[index, "Parent SKU"] = parentSku
+            #Set Variation Sequence
+            df.loc[index,"Variation Sequence"] = 1
+        elif index >0 and parentSku == df.loc[index-1,"Parent SKU"]:
+            df.loc[index,"Variation Sequence"] = df.loc[index-1,"Variation Sequence"] +1
+            df.loc[index, "Parent SKU"] = parentSku
         else:
             df.loc[index, "Parent SKU"] = parentSku
+
+     
         
         rowProcessed += 1
         if str(rowProcessed).endswith('0'):
